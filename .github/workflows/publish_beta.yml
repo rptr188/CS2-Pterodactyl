@@ -14,8 +14,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build & Publish Docker image for BETA-LATEST tag
         run: |
-              docker build . -t ghcr.io/1zc/steamrt3-pterodactyl:beta-latest -f docker/RT3Beta-Dockerfile
-              docker push ghcr.io/1zc/steamrt3-pterodactyl:beta-latest
+              docker build . -t ghcr.io/rptr188/steamrt3-pterodactyl:beta-latest -f docker/RT3Beta-Dockerfile
+              docker push ghcr.io/rptr188/steamrt3-pterodactyl:beta-latest
   publish-docker-image-dev:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/dev' # Running this job only for dev branch
@@ -29,5 +29,5 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build & Publish Docker image for BETA-DEV tag
         run: |
-              docker build . -t ghcr.io/1zc/steamrt3-pterodactyl:beta-dev -f docker/RT3Beta-Dockerfile
-              docker push ghcr.io/1zc/steamrt3-pterodactyl:beta-dev
+              docker build . -t ghcr.io/rptr188/steamrt3-pterodactyl:beta-dev -f docker/RT3Beta-Dockerfile
+              docker push ghcr.io/rptr188/steamrt3-pterodactyl:beta-dev

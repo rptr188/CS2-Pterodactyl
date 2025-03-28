@@ -4,68 +4,10 @@ sleep 1
 # Make internal Docker IP address available to processes.
 export INTERNAL_IP=`ip route get 1 | awk '{print $NF;exit}'`
 
-# Update Source Server
-if [ ! -z ${SRCDS_APPID} ]; then
-    if [ ${SRCDS_STOP_UPDATE} -eq 0 ]; then
-        STEAMCMD=""
-        echo "Starting SteamCMD for AppID: ${SRCDS_APPID}"
-        if [ ! -z ${SRCDS_BETAID} ]; then
-            if [ ! -z ${SRCDS_BETAPASS} ]; then
-                if [ ${SRCDS_VALIDATE} -eq 1 ]; then
-                    echo "SteamCMD Validate Flag Enabled! Triggered install validation for AppID: ${SRCDS_APPID}"
-                    echo "THIS MAY WIPE CUSTOM CONFIGURATIONS! Please stop the server if this was not intended."
-                    if [ ! -z ${SRCDS_LOGIN} ]; then
-                        STEAMCMD="./steamcmd/steamcmd.sh +login ${SRCDS_LOGIN} ${SRCDS_LOGIN_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} -betapassword ${SRCDS_BETAPASS} validate +quit"
-                    else
-                        STEAMCMD="./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} -betapassword ${SRCDS_BETAPASS} validate +quit"
-                    fi
-                else
-                    if [ ! -z ${SRCDS_LOGIN} ]; then
-                        STEAMCMD="./steamcmd/steamcmd.sh +login ${SRCDS_LOGIN} ${SRCDS_LOGIN_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} -betapassword ${SRCDS_BETAPASS} +quit"
-                    else
-                        STEAMCMD="./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} -betapassword ${SRCDS_BETAPASS} +quit"
-                    fi
-                fi
-            else
-                if [ ${SRCDS_VALIDATE} -eq 1 ]; then
-                    if [ ! -z ${SRCDS_LOGIN} ]; then
-                        STEAMCMD="./steamcmd/steamcmd.sh +login ${SRCDS_LOGIN} ${SRCDS_LOGIN_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} validate +quit"
-                    else             
-                        STEAMCMD="./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} validate +quit"
-                    fi
-                else
-                    if [ ! -z ${SRCDS_LOGIN} ]; then
-                        STEAMCMD="./steamcmd/steamcmd.sh +login ${SRCDS_LOGIN} ${SRCDS_LOGIN_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} +quit"
-                    else 
-                        STEAMCMD="./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/container +app_update ${SRCDS_APPID} -beta ${SRCDS_BETAID} +quit"
-                    fi
-                fi
-            fi
-        else
-            if [ ${SRCDS_VALIDATE} -eq 1 ]; then
-            echo "SteamCMD Validate Flag Enabled! Triggered install validation for AppID: ${SRCDS_APPID}"
-            echo "THIS MAY WIPE CUSTOM CONFIGURATIONS! Please stop the server if this was not intended."
-                if [ ! -z ${SRCDS_LOGIN} ]; then
-                    STEAMCMD="./steamcmd/steamcmd.sh +login ${SRCDS_LOGIN} ${SRCDS_LOGIN_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} validate +quit"
-                else
-                    STEAMCMD="./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/container +app_update ${SRCDS_APPID} validate +quit"
-                fi
-            else
-                if [ ! -z ${SRCDS_LOGIN} ]; then
-                    STEAMCMD="./steamcmd/steamcmd.sh +login ${SRCDS_LOGIN} ${SRCDS_LOGIN_PASS} +force_install_dir /home/container +app_update ${SRCDS_APPID} +quit"
-                else
-                    STEAMCMD="./steamcmd/steamcmd.sh +login anonymous +force_install_dir /home/container +app_update ${SRCDS_APPID} +quit"
-                fi
-            fi
-        fi
+       # Issue #44 - We can't symlink this, causes "File not found" errors. As a mitigation, copy over the updated binary on start.
+cp -f ./steamcmd/linux32/steamclient.so ./.steam/sdk32/steamclient.so
+cp -f ./steamcmd/linux64/steamclient.so ./.steam/sdk64/steamclient.so
 
-        # echo "SteamCMD Launch: ${STEAMCMD}"
-        eval ${STEAMCMD}
-        # Issue #44 - We can't symlink this, causes "File not found" errors. As a mitigation, copy over the updated binary on start.
-        cp -f ./steamcmd/linux32/steamclient.so ./.steam/sdk32/steamclient.so
-        cp -f ./steamcmd/linux64/steamclient.so ./.steam/sdk64/steamclient.so
-    fi
-fi
 
 # Edit /home/container/game/csgo/gameinfo.gi to add MetaMod path
 # Credit: https://github.com/ghostcap-gaming/ACMRS-cs2-metamod-update-fix/blob/main/acmrs.sh

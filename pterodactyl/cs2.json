@@ -13,10 +13,10 @@
         "steam_disk_space"
     ],
     "docker_images": {
-        "SteamRT3": "ghcr.io\/1zc\/steamrt3-pterodactyl:latest",
-        "SteamRT3-PublicBeta": "ghcr.io\/1zc\/steamrt3-pterodactyl:beta-latest",
-        "SteamRT3-Dev": "ghcr.io\/1zc\/steamrt3-pterodactyl:dev",
-        "SteamRT3-PublicBetaDev": "ghcr.io\/1zc\/steamrt3-pterodactyl:beta-dev"
+        "SteamRT3": "ghcr.io\/rptr188\/steamrt3-pterodactyl:latest",
+        "SteamRT3-PublicBeta": "ghcr.io\/rptr188\/steamrt3-pterodactyl:beta-latest",
+        "SteamRT3-Dev": "ghcr.io\/rptr188\/steamrt3-pterodactyl:dev",
+        "SteamRT3-PublicBetaDev": "ghcr.io\/rptr188\/steamrt3-pterodactyl:beta-dev"
     },
     "file_denylist": [],
     "startup": ".\/game\/cs2.sh -dedicated +ip 0.0.0.0 -port {{SERVER_PORT}} +map {{SRCDS_MAP}} -maxplayers {{SRCDS_MAXPLAYERS}} +sv_setsteamaccount {{STEAM_ACC}}",
